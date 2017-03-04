@@ -1,4 +1,6 @@
 import com.aldebaran.qi.Application;
+import com.aldebaran.qi.helper.proxies.ALAutonomousLife;
+import com.aldebaran.qi.helper.proxies.ALMotion;
 
 public class MainApp {
     public static void main(String[] args) {
@@ -6,19 +8,29 @@ public class MainApp {
         Application application = new Application(args, robotUrl);
         application.start();
 
-        Moving mov = new Moving(application);
-       // mov.sedniSi();
         try {
-            BarcodeReader barcodeReader = new BarcodeReader(application.session());
-            barcodeReader.run();
+            ALAutonomousLife autonomousLife = new ALAutonomousLife(application.session());
+            autonomousLife.stopAll();
 
-//            TouchSubscriber touchSubscriber = new TouchSubscriber(application.session());
-//            touchSubscriber.run();
+            ALMotion motion = new ALMotion(application.session());
+            motion.wakeUp();
 
-            application.run();
-        } catch (Exception e) {
+            Moving mov = new Moving(application);
+
+            Tracker tracker = new Tracker(application.session(), mov);
+            tracker.run();
+
+
+//            Thread.sleep(20000);
+//            tracker.clean();
+            while(true)
+            {
+
+            }
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
         }
-
     }
 }
