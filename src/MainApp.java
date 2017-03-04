@@ -28,6 +28,8 @@ public class MainApp {
 //            touchSubscriber.run();
 
             Thread.sleep(20000);
+
+            tracker.clean();
 //            application.run();
         } catch (Exception e) {
             e.printStackTrace();
