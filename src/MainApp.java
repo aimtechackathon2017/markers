@@ -28,6 +28,7 @@ public class MainApp {
             ALMotion motion = new ALMotion(application.session());
             motion.wakeUp();
 
+//            tts.say("Zdravím, já jsem Romeo, budoucí vládce lidstva.");
 
             Moving mov = new Moving(application);
 

@@ -108,12 +108,12 @@ public class Tracker {
                     {
                         tracker.pointAt("RArm",targetDistance,0,1.0f);
                         foundMark=true;
-                        moving.tts.say("našel, jdu tam");
+                        moving.tts.say("Hele, značka! Jdu tam.");
                         moving.walk(targetDistance.get(0) - distanceOffset, 0, 0);
                         foundMark=false;
                         run();
                     }else{
-                        moving.tts.say("jsem blízko ");
+                        moving.tts.say("Jsem dost blízko.");
                         foundMark=false;
                         moving.turnLeft(90);
                         run();
