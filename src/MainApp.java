@@ -1,4 +1,5 @@
 import com.aldebaran.qi.Application;
+import com.aldebaran.qi.CallError;
 
 public class MainApp {
     public static void main(String[] args) {
@@ -8,7 +9,16 @@ public class MainApp {
 
         Moving mov = new Moving(application);
        // mov.sedniSi();
+
         try {
+            mov.scanByHead();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (CallError callError) {
+            callError.printStackTrace();
+        }
+
+       /* try {
             BarcodeReader barcodeReader = new BarcodeReader(application.session());
             barcodeReader.run();
 
@@ -18,7 +28,8 @@ public class MainApp {
             application.run();
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
+
 
     }
 }
