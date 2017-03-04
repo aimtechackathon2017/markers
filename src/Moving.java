@@ -15,15 +15,16 @@ public class Moving {
 
     Application application;
     ALRobotPosture posture;
-    ALMotion motion;
+    public ALMotion motion;
 
-    float LEFT_MAX = 2.0857f;
-    float RIGHT_MAX = -2.0857f;
+    float DIAMETR=1f;//2.0857f;
+    float LEFT_MAX =DIAMETR;
+    float RIGHT_MAX = -DIAMETR;
     float UP_MIN=0.330041f;
     float UP_CENTER=0f;
     float UP_MAX=-0.449073f;
     float UP_STEP = .3f;
-    float scanTime=3f;
+    float scanTime=0.2f;
 
 
     float headPositionTop=0;
@@ -77,9 +78,9 @@ public class Moving {
 
 
 
-
         try {
-            motion.setStiffnesses("Head", 1.0f);
+            motion.setStiffnesses("HeadYaw", 1.0f);
+            motion.setStiffnesses("HeadPitch", 1.0f);
             if(!vertical){
                 ArrayList<Float> top = new ArrayList<>();
                 top.add(new Float(headPositionLeft));
@@ -94,6 +95,9 @@ public class Moving {
                 leftT.add(new Float(time));
                 motion.angleInterpolation("HeadPitch",left,leftT,true);
             }
+            motion.setStiffnesses("HeadPitch", 0.0f);
+            motion.setStiffnesses("HeadYaw", 0.0f);
+
 
         } catch (CallError callError) {
             callError.printStackTrace();
@@ -103,16 +107,44 @@ public class Moving {
     }
 
 
+    public void lookDown(){
+        headPositionTop = UP_MIN;
+        headPositionLeft = 0;
+        moveToPosition(scanTime,true);
+
+       // moveToPosition(scanTime,false);
+
+    }
 
 
 
     public void scanHorizontByHead(){
 
-            headPositionTop=UP_CENTER;
-            headPositionLeft=RIGHT_MAX;
+
+        headPositionTop=UP_MAX;
+        headPositionLeft=RIGHT_MAX;
+        int div = 5;
+
+        try {
+
+            float divF = Math.abs(RIGHT_MAX-LEFT_MAX)/div;
+            for (int i = 0; i < div; i++) {
+                headPositionLeft+=divF;
+                moveToPosition(scanTime,false);
+                Thread.sleep(500);
+            }
+            headPositionLeft=0;
             moveToPosition(scanTime,false);
-            headPositionLeft=LEFT_MAX;
-            moveToPosition(scanTime,false);
+/*
+            
+
+*/
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
 
     }
 
