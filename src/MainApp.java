@@ -10,6 +10,9 @@ public class MainApp {
 
         Application application = new Application(args, robotUrl);
         application.start();
+
+        Moving mov = new Moving(application);
+       // mov.sedniSi();
         try {
             ALAutonomousLife alAutonomousLife = new ALAutonomousLife(application.session());
             alAutonomousLife.stopAll();
