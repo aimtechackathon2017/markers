@@ -18,9 +18,13 @@ public class MainApp {
             motion.wakeUp();
 
             Tracker tracker = new Tracker(application.session());
+
+            Navigation navigation = new Navigation(application.session());
+            navigation.setTracker(tracker);
+            tracker.setNavigation(navigation);
+
             tracker.run();
 
-//
 //            BarcodeReader barcodeReader = new BarcodeReader(application.session());
 //            barcodeReader.run();
 
