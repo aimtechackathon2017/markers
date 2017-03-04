@@ -10,13 +10,7 @@ public class MainApp {
         Moving mov = new Moving(application);
        // mov.sedniSi();
 
-        try {
-            mov.scanByHead();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (CallError callError) {
-            callError.printStackTrace();
-        }
+     
 
        /* try {
             BarcodeReader barcodeReader = new BarcodeReader(application.session());
