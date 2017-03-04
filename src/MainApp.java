@@ -18,11 +18,15 @@ public class MainApp {
             Moving mov = new Moving(application);
 
             Tracker tracker = new Tracker(application.session(), mov);
-
             tracker.run();
 
-            Thread.sleep(20000);
-            tracker.clean();
+
+//            Thread.sleep(20000);
+//            tracker.clean();
+            while(true)
+            {
+
+            }
         }
         catch (Exception e)
         {

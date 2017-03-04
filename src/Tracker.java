@@ -16,6 +16,7 @@ public class Tracker {
     private String targetName = "";
     private long eventId;
     private Moving moving = null;
+    public final float distanceOffset = 0.8f;
 
     public Tracker(Session session, Moving moving) {
         this.session = session;
@@ -50,8 +51,11 @@ public class Tracker {
             return;
         }
 
+
         this.moving.standUp();
-        this.moving.lookDown();
+//        this.moving.lookDown();
+
+        this.moving.scanHorizontByHead();
 
         this.tracker.track(this.targetName);
 
@@ -66,7 +70,12 @@ public class Tracker {
                     clean();
                     List<Float> headAngle = moving.getHeadAngle();
                     moving.walk(0, 0, headAngle.get(0));
-                    moving.walk(0.2f, 0, 0);
+                    List<Float> targetDistance = tracker.getTargetPosition();
+                    Float walkingDistance = targetDistance.get(0) - distanceOffset;
+                    if (walkingDistance >= 1f)
+                    {
+                        moving.walk(targetDistance.get(0) - distanceOffset, 0, 0);
+                    }
                     run();
                 }
                 catch (Exception e)
