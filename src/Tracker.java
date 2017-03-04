@@ -113,11 +113,13 @@ public class Tracker {
                         foundMark=false;
                         run();
                     }else{
-//                        moving.tts.say("Jsem dost blízko.");
+                        moving.tts.say("Jsem dost blízko.");
+                        moving.tts.say( Math.floor(targetDistance.get(0) * 100.0) / 100.0 + " metrů.");
+
+                        Thread.sleep(10000);
                         foundMark=false;
                         moving.turnLeft(90);
                         run();
-                        Thread.sleep(5000);
 
                     }
                 }
