@@ -12,7 +12,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.Dimension;
-import java.awt.List;
+
 import java.awt.color.ColorSpace;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -23,6 +23,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.*;
+import java.util.List;
 
 
 /**
@@ -61,6 +62,11 @@ public class VideoCapturing implements Runnable {
         hintMap = new HashMap<EncodeHintType, ErrorCorrectionLevel>();
         hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
         run = true;
+        addListener(content -> {
+            if (content != null) {
+                System.out.println("QRCode:" + content);
+            }
+        });
     }
 
     public void stop() {
@@ -80,6 +86,23 @@ public class VideoCapturing implements Runnable {
             while (run){
                 image = getVideo();
                 label.setIcon(new ImageIcon(image));
+                try {
+                    /*File outputfile = new File("images/" + System.currentTimeMillis() + "image.jpg");
+                    ImageIO.write(myImage, "jpg", outputfile);*/
+
+                    //String qrCode = readQRCode(outputfile.getPath(),CHAR_SET,hintMap);
+                    String qrCode = readQRCode(image,CHAR_SET,hintMap);
+                    if (qrCode != null) {
+                        //System.out.println("QRCode:" + qrCode);
+                    }
+                    new Thread(()->{
+                        callListeners(qrCode);
+                    }).start();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
 
             }
 
@@ -90,26 +113,27 @@ public class VideoCapturing implements Runnable {
 
     }
 
+    private List<OnQRListener> listenerList = new ArrayList<>();
+
+    public void addListener(OnQRListener listener) {
+        this.listenerList.add(listener);
+    }
+
+    public interface OnQRListener {
+        void onQRScanned(String content);
+    }
+
+    private void callListeners(String content) {
+        for (OnQRListener listener : listenerList) {
+            listener.onQRScanned(content);
+        }
+    }
+
     public BufferedImage getVideo() throws Exception {
         java.util.List<Object> image = (java.util.List<Object>) video.getImageRemote(moduleName);
         ByteBuffer buffer = (ByteBuffer)image.get(6);
         byte[] rawData = buffer.array();
         BufferedImage myImage = createRGBImage(rawData, WIDTH, HEIGHT);
-
-
-        try {
-            /*File outputfile = new File("images/" + System.currentTimeMillis() + "image.jpg");
-            ImageIO.write(myImage, "jpg", outputfile);*/
-
-            //String qrCode = readQRCode(outputfile.getPath(),CHAR_SET,hintMap);
-            String qrCode = readQRCode(myImage,CHAR_SET,hintMap);
-            if (qrCode != null) {
-                System.out.println("QRCode:" + qrCode);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
 
 

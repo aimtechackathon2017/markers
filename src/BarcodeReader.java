@@ -22,7 +22,7 @@ public class BarcodeReader {
         long barcodeSubscribeId = 0;
 
         //ALBarcodeReader alBarcodeReader = new ALBarcodeReader(this.session);
-        System.out.println(alBarcodeReader.getMethodList());
+        //System.out.println(alBarcodeReader.getMethodList());
 
         memory = new ALMemory(this.session);
         barcodeSubscribeId = memory.subscribeToEvent("BarcodeReader/BarcodeDetected", new EventCallback<ArrayList>() {
