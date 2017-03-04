@@ -21,8 +21,8 @@ public class BarcodeReader {
         ALTextToSpeech tts = new ALTextToSpeech(this.session);
         long barcodeSubscribeId = 0;
 
-//        ALBarcodeReader alBarcodeReader = new ALBarcodeReader(this.session);
-//        System.out.println(alBarcodeReader.getMethodList());
+        //ALBarcodeReader alBarcodeReader = new ALBarcodeReader(this.session);
+        System.out.println(alBarcodeReader.getMethodList());
 
         memory = new ALMemory(this.session);
         barcodeSubscribeId = memory.subscribeToEvent("BarcodeReader/BarcodeDetected", new EventCallback<ArrayList>() {
@@ -34,7 +34,7 @@ public class BarcodeReader {
                 System.out.println(arg0);
             }
         });
-//        Thread.sleep(20000);
-//        memory.unsubscribeToEvent(barcodeSubscribeId);
+       // Thread.sleep(20000);
+       // memory.unsubscribeToEvent(barcodeSubscribeId);
     }
 }

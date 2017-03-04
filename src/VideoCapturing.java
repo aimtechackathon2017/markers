@@ -1,8 +1,10 @@
 import com.aldebaran.qi.CallError;
 import com.aldebaran.qi.Session;
+import com.aldebaran.qi.helper.proxies.ALPhotoCapture;
 import com.aldebaran.qi.helper.proxies.ALVideoDevice;
 import com.google.zxing.*;
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
+import com.google.zxing.common.GlobalHistogramBinarizer;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
@@ -42,13 +44,13 @@ public class VideoCapturing implements Runnable {
     public static final String CHAR_SET = "UTF-8"; // or "ISO-8859-1"
     Map<EncodeHintType, ErrorCorrectionLevel> hintMap;
 
-    private static final int HEIGHT = 480;
-    private static final int WIDTH = 640;
+    private static final int HEIGHT = 960;//240;//480;
+    private static final int WIDTH = 1280;//320;//640;
 
     private final int topCamera = 0;
-    private final int resolution = 2; // 640 x 480
-    private final int colorspace = 11; // RGB
-    private final int frameRate = 10; // FPS
+    private final int resolution = 3;//320 x240 // 640 x 480
+    private final int colorspace = 	11;//11 // RGB
+    private final int frameRate = 5; // FPS
 
     private JLabel label;
 
@@ -78,6 +80,7 @@ public class VideoCapturing implements Runnable {
             while (run){
                 image = getVideo();
                 label.setIcon(new ImageIcon(image));
+
             }
 
             release();
@@ -168,6 +171,8 @@ public class VideoCapturing implements Runnable {
                     new BufferedImageLuminanceSource(bufferedImage)));
             Result qrCodeResult = new MultiFormatReader().decode(binaryBitmap, hintMap);
             return qrCodeResult.getText();
+
+           // BinaryBitmap binaryBitmap1 = new BinaryBitmap(new GlobalHistogramBinarizer())
         } catch (NotFoundException e) {
             e.printStackTrace();
             return null;
