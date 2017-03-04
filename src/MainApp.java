@@ -17,13 +17,18 @@ public class MainApp {
             ALMotion motion = new ALMotion(application.session());
             motion.wakeUp();
 
-            BarcodeReader barcodeReader = new BarcodeReader(application.session());
-            barcodeReader.run();
+            Tracker tracker = new Tracker(application.session());
+            tracker.run();
+
+//
+//            BarcodeReader barcodeReader = new BarcodeReader(application.session());
+//            barcodeReader.run();
 
 //            TouchSubscriber touchSubscriber = new TouchSubscriber(application.session());
 //            touchSubscriber.run();
 
-            application.run();
+            Thread.sleep(20000);
+//            application.run();
         } catch (Exception e) {
             e.printStackTrace();
         }
