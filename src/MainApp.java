@@ -1,46 +1,32 @@
 import com.aldebaran.qi.Application;
-import com.aldebaran.qi.CallError;
 import com.aldebaran.qi.helper.proxies.ALAutonomousLife;
-import com.aldebaran.qi.helper.proxies.ALTextToSpeech;
+import com.aldebaran.qi.helper.proxies.ALMotion;
 
 public class MainApp {
-
-    private static ALTextToSpeech tts;
-
-
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         String robotUrl = "tcp://192.168.90.99:9559";
         Application application = new Application(args, robotUrl);
         application.start();
-        tts = new ALTextToSpeech(application.session());
 
-        ALAutonomousLife autonomousLife = new ALAutonomousLife(application.session());
-        autonomousLife.stopAll();
+        try {
+            ALAutonomousLife autonomousLife = new ALAutonomousLife(application.session());
+            autonomousLife.stopAll();
 
-        Moving mov = new Moving(application);
-      //  mov.motion.up
-      //  tts.say("Říká maminka: Pepíčku, co děláš? Pepíček odpoví: Ale jen zatloukám hřebík. Tak ať se nebouchneš do prstu. Šílíš?!! Nejsem blbej, drží mi ho Alenka.");
-        //mov.sedniSi();
-       mov.lookDown();
-       Thread.sleep(5000);
-        while(true){
-            mov.scanHorizontByHead();
-            //tts.say("proskenováno");
+            ALMotion motion = new ALMotion(application.session());
+            motion.wakeUp();
+
+            Moving mov = new Moving(application);
+
+            Tracker tracker = new Tracker(application.session(), mov);
+
+            tracker.run();
+
+            Thread.sleep(20000);
+            tracker.clean();
         }
-
-
-       /* try {
-            BarcodeReader barcodeReader = new BarcodeReader(application.session());
-            barcodeReader.run();
-
-//            TouchSubscriber touchSubscriber = new TouchSubscriber(application.session());
-//            touchSubscriber.run();
-
-            application.run();
-        } catch (Exception e) {
+        catch (Exception e)
+        {
             e.printStackTrace();
-        }*/
-
-
+        }
     }
 }
