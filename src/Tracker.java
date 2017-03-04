@@ -51,6 +51,7 @@ public class Tracker {
         }
 
         this.moving.standUp();
+        this.moving.lookDown();
 
         this.tracker.track(this.targetName);
 
