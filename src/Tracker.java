@@ -15,11 +15,13 @@ public class Tracker {
     private String targetName = "";
     private long eventId=0;
     private Moving moving = null;
+
     private int scanningCounter = 0;
     private int scanningCounterLimit = 3;
     public final float distanceOffset = 0.3f;
     State state;
     boolean foundMark = false;
+
 
     public Tracker(Session session, Moving moving, State f) {
         this.session = session;
@@ -100,6 +102,7 @@ public class Tracker {
                     List<Float> headAngle = moving.getHeadAngle();
                     moving.walk(0, 0, headAngle.get(0));
                     List<Float> targetDistance = tracker.getTargetPosition();
+
                     Float walkingDistance = targetDistance.get(0) - distanceOffset;
                     if (walkingDistance >= 0.3f)
                     {

@@ -211,11 +211,6 @@ public class Moving {
         }
     }
 
-    public List<Float> getHeadAngle() throws Exception
-    {
-        return this.motion.getAngles("HeadYaw", true);
-    }
-
 
     public void handsUp()
     {
@@ -260,5 +255,10 @@ public class Moving {
         }
     }
 
+    public List<Float> getHeadAngle() throws Exception
+    {
+        return this.motion.getAngles("HeadYaw", true);
+    }
+    
 
 }
