@@ -17,7 +17,7 @@ public class Moving {
     ALRobotPosture posture;
     public ALMotion motion;
 
-    float DIAMETR=1.5f;//2.0857f;
+    float DIAMETR=2f;//2.0857f;
     float LEFT_MAX =DIAMETR;
     float RIGHT_MAX = -DIAMETR;
     float UP_MIN=0.330041f;
