@@ -178,6 +178,20 @@ public class Moving {
         }
     }
 
+    public void turnLeft(float degrees)
+    {
+        float radians = (3.14f * degrees) / 180;
+        try {
+            motion.moveTo(0f,0f,radians);
+        } catch (CallError e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
 
     /**
      * 	Walking forward

@@ -15,6 +15,8 @@ public class Tracker {
     private String targetName = "";
     private long eventId=0;
     private Moving moving = null;
+    private int scanningCounter = 0;
+    private int scanningCounterLimit = 3;
     public final float distanceOffset = 0.3f;
     State state;
     boolean foundMark = false;
@@ -45,7 +47,13 @@ public class Tracker {
                     while (true)
                     if(!foundMark){
                         System.out.println("skenuji");
-                            moving.scanHorizontByHead();
+                        moving.scanHorizontByHead();
+
+                        if (scanningCounter++ >= scanningCounterLimit)
+                        {
+                            moving.turnLeft(90);
+                            scanningCounter = 0;
+                        }
                     }else{
                         try {
                             System.out.println("nehledam ");
@@ -84,17 +92,18 @@ public class Tracker {
             @Override
             public void onEvent(ArrayList arg0) throws InterruptedException, CallError {
                 System.out.println("Target Detected!");
-                  System.out.println(arg0);
+                System.out.println(arg0);
+                scanningCounter = 0;
 
                 try {
                     clean();
                     List<Float> headAngle = moving.getHeadAngle();
                     moving.walk(0, 0, headAngle.get(0));
                     List<Float> targetDistance = tracker.getTargetPosition();
-                   // tracker.pointAt("RArm",targetDistance,0,1.0f);
                     Float walkingDistance = targetDistance.get(0) - distanceOffset;
                     if (walkingDistance >= 0.3f)
                     {
+                        tracker.pointAt("RArm",targetDistance,0,1.0f);
                         foundMark=true;
                         moving.tts.say("našel, jdu tam");
                         moving.walk(targetDistance.get(0) - distanceOffset, 0, 0);
@@ -103,6 +112,7 @@ public class Tracker {
                     }else{
                         moving.tts.say("jsem blízko ");
                         foundMark=false;
+                        moving.turnLeft(90);
                         run();
 
 
