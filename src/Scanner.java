@@ -25,6 +25,11 @@ public class Scanner {
             this.tracker.run();
             this.moving.scanHorizontByHead();
             this.tracker.clean();
+
+            if (!this.tracker.markerFound)
+            {
+                this.moving.turnLeft(90);
+            }
         }
         catch(Exception e)
         {

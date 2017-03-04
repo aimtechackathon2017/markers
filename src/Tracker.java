@@ -95,16 +95,16 @@ public class Tracker {
                         markerFound = true;
                         moving.walk(0, 0, markerAngle);
                         moving.walk(targetDistance.get(0) - distanceOffset, 0, 0);
-                        markerFound = false;
-                        markerAngle = -10f;
+//                        markerFound = false;
+//                        markerAngle = -10f;
                         run();
                     }
                     else
                     {
                         System.out.println("I am too close!");
 //                        textToSpeech.say("Jsem moc blízko. Vzdálenost " + targetDistance.get(0));
-                        markerFound = false;
-                        markerAngle = -10f;
+//                        markerFound = false;
+//                        markerAngle = -10f;
                     }
                 }
                 catch (Exception e)
