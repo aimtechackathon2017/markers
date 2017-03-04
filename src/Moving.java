@@ -224,6 +224,11 @@ public class Moving {
 			e.printStackTrace();
 		}
     }
+
+    public List<Float> getHeadAngle() throws Exception
+    {
+        return this.motion.getAngles("HeadYaw", true);
+    }
     
 
 }

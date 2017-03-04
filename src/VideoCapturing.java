@@ -95,9 +95,9 @@ public class VideoCapturing implements Runnable {
                     if (qrCode != null) {
                         //System.out.println("QRCode:" + qrCode);
                     }
-                    new Thread(()->{
+                    //new Thread(()->{
                         callListeners(qrCode);
-                    }).start();
+                    //}).start();
 
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -16,7 +16,7 @@ public class Tracker {
     private String targetName = "";
     private long eventId;
     private Moving moving = null;
-    public final float distanceOffset = 0.8f;
+    public final float distanceOffset = 0.5f;
 
     public Tracker(Session session, Moving moving) {
         this.session = session;
@@ -71,6 +71,7 @@ public class Tracker {
                     List<Float> headAngle = moving.getHeadAngle();
                     moving.walk(0, 0, headAngle.get(0));
                     List<Float> targetDistance = tracker.getTargetPosition();
+
                     Float walkingDistance = targetDistance.get(0) - distanceOffset;
                     if (walkingDistance >= 1f)
                     {
