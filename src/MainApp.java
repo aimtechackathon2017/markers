@@ -1,4 +1,6 @@
 import com.aldebaran.qi.Application;
+import com.aldebaran.qi.helper.proxies.ALAutonomousLife;
+import com.aldebaran.qi.helper.proxies.ALMotion;
 
 public class MainApp {
     public static void main(String[] args) {
@@ -9,6 +11,12 @@ public class MainApp {
         Moving mov = new Moving(application);
        // mov.sedniSi();
         try {
+            ALAutonomousLife autonomousLife = new ALAutonomousLife(application.session());
+            autonomousLife.stopAll();
+
+            ALMotion motion = new ALMotion(application.session());
+            motion.wakeUp();
+
             BarcodeReader barcodeReader = new BarcodeReader(application.session());
             barcodeReader.run();
 
