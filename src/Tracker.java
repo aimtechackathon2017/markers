@@ -63,6 +63,8 @@ public class Tracker {
 
                 try {
                     clean();
+                    List<Float> headAngle = moving.getHeadAngle();
+                    moving.walk(0, 0, headAngle.get(0));
                     moving.walk(0.2f, 0, 0);
                     run();
                 }

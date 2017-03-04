@@ -163,7 +163,12 @@ public class Moving {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-    }    
+    }
+
+    public List<Float> getHeadAngle() throws Exception
+    {
+        return this.motion.getAngles("HeadYaw", true);
+    }
     
     
     public void handsUp()
