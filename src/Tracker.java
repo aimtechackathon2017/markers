@@ -2,7 +2,6 @@ import com.aldebaran.qi.CallError;
 import com.aldebaran.qi.Session;
 import com.aldebaran.qi.helper.EventCallback;
 import com.aldebaran.qi.helper.proxies.ALMemory;
-import com.aldebaran.qi.helper.proxies.ALNavigation;
 import com.aldebaran.qi.helper.proxies.ALTracker;
 
 import java.util.ArrayList;
@@ -14,13 +13,15 @@ public class Tracker {
     private ALMemory memory;
     private ALTracker tracker = null;
     private String targetName = "";
-    private long eventId;
+    private long eventId=0;
     private Moving moving = null;
-    public final float distanceOffset = 0.8f;
+    public final float distanceOffset = 0.3f;
+    State state;
+    boolean foundMark = false;
 
-    public Tracker(Session session, Moving moving) {
+    public Tracker(Session session, Moving moving, State f) {
         this.session = session;
-
+        this.state =f;
         try {
             this.tracker = new ALTracker(session);
             this.moving = moving;
@@ -37,6 +38,26 @@ public class Tracker {
             ArrayList<Float> positions = new ArrayList<Float>(positionsVal);
 
             tracker.setRelativePosition(positions);
+
+            Runnable scanning = new Runnable() {
+                @Override
+                public void run() {
+                    while (true)
+                    if(!foundMark){
+                        System.out.println("skenuji");
+                            moving.scanHorizontByHead();
+                    }else{
+                        try {
+                            System.out.println("nehledam ");
+                            Thread.sleep(200);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            };
+            Thread thread= new Thread(scanning);
+            thread.start();
         }
         catch (Exception e)
         {
@@ -55,7 +76,6 @@ public class Tracker {
         this.moving.standUp();
 //        this.moving.lookDown();
 
-        this.moving.scanHorizontByHead();
 
         this.tracker.track(this.targetName);
 
@@ -64,19 +84,29 @@ public class Tracker {
             @Override
             public void onEvent(ArrayList arg0) throws InterruptedException, CallError {
                 System.out.println("Target Detected!");
-//                System.out.println(arg0);
+                  System.out.println(arg0);
 
                 try {
                     clean();
                     List<Float> headAngle = moving.getHeadAngle();
                     moving.walk(0, 0, headAngle.get(0));
                     List<Float> targetDistance = tracker.getTargetPosition();
+                   // tracker.pointAt("RArm",targetDistance,0,1.0f);
                     Float walkingDistance = targetDistance.get(0) - distanceOffset;
-                    if (walkingDistance >= 1f)
+                    if (walkingDistance >= 0.3f)
                     {
+                        foundMark=true;
+                        moving.tts.say("našel, jdu tam");
                         moving.walk(targetDistance.get(0) - distanceOffset, 0, 0);
+                        foundMark=false;
+                        run();
+                    }else{
+                        moving.tts.say("jsem blízko ");
+                        foundMark=false;
+                        run();
+
+
                     }
-                    run();
                 }
                 catch (Exception e)
                 {
@@ -84,10 +114,20 @@ public class Tracker {
                 }
             }
         });
+
+
     }
 
     public void clean() throws Exception
     {
-        this.memory.unsubscribeToEvent(this.eventId);
+        try {
+            if(eventId!=0){
+                this.memory.unsubscribeToEvent(this.eventId);
+                eventId=0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }
