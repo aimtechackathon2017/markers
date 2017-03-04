@@ -1,5 +1,7 @@
 import com.aldebaran.qi.Application;
 import com.aldebaran.qi.CallError;
+import com.aldebaran.qi.helper.proxies.ALAutonomousLife;
+import com.aldebaran.qi.helper.proxies.ALMotion;
 
 public class MainApp {
     public static void main(String[] args) {
@@ -7,7 +9,20 @@ public class MainApp {
         Application application = new Application(args, robotUrl);
         application.start();
 
-        Moving mov = new Moving(application);
+        try {
+            ALAutonomousLife autonomousLife = new ALAutonomousLife(application.session());
+            autonomousLife.stopAll();
+            ALMotion motion = new ALMotion(application.session());
+            motion.wakeUp();
+
+            Moving mov = new Moving(application);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+
        // mov.sedniSi();
 
      
