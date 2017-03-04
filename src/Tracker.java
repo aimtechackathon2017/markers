@@ -108,16 +108,16 @@ public class Tracker {
                     {
                         tracker.pointAt("RArm",targetDistance,0,1.0f);
                         foundMark=true;
-                        moving.tts.say("Hele, značka! Jdu tam.");
+                        moving.tts.say("Hele, značka! Jdu " + Math.floor(targetDistance.get(0) * 100.0) / 100.0 + " metrů.");
                         moving.walk(targetDistance.get(0) - distanceOffset, 0, 0);
                         foundMark=false;
                         run();
                     }else{
-                        moving.tts.say("Jsem dost blízko.");
+//                        moving.tts.say("Jsem dost blízko.");
                         foundMark=false;
                         moving.turnLeft(90);
                         run();
-
+                        Thread.sleep(5000);
 
                     }
                 }
