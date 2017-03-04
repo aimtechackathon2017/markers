@@ -1,19 +1,24 @@
 import com.aldebaran.qi.CallError;
 import com.aldebaran.qi.Session;
 import com.aldebaran.qi.helper.proxies.ALVideoDevice;
-import com.google.zxing.EncodeHintType;
-import com.google.zxing.NotFoundException;
+import com.google.zxing.*;
+import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
+import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.Dimension;
 import java.awt.List;
 import java.awt.color.ColorSpace;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.*;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.*;
 
@@ -34,6 +39,8 @@ public class VideoCapturing implements Runnable {
     private String moduleName;
 
     public static final String IMAGES_FOLDER = "images/";
+    public static final String CHAR_SET = "UTF-8"; // or "ISO-8859-1"
+    Map<EncodeHintType, ErrorCorrectionLevel> hintMap;
 
     private static final int HEIGHT = 480;
     private static final int WIDTH = 640;
@@ -45,8 +52,17 @@ public class VideoCapturing implements Runnable {
 
     private JLabel label;
 
+    private boolean run;
+
     public VideoCapturing(Session session) {
         this.session = session;
+        hintMap = new HashMap<EncodeHintType, ErrorCorrectionLevel>();
+        hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
+        run = true;
+    }
+
+    public void stop() {
+        this.run = false;
     }
 
     @Override
@@ -59,7 +75,7 @@ public class VideoCapturing implements Runnable {
             System.out.format("subscribed with id: %s", moduleName);
 
             BufferedImage image;
-            for (int i = 0; i < 200; i++) {
+            while (run){
                 image = getVideo();
                 label.setIcon(new ImageIcon(image));
             }
@@ -79,22 +95,15 @@ public class VideoCapturing implements Runnable {
 
 
         try {
+            /*File outputfile = new File("images/" + System.currentTimeMillis() + "image.jpg");
+            ImageIO.write(myImage, "jpg", outputfile);*/
 
-            File outputfile = new File("images/" + System.currentTimeMillis() + "image.jpg");
-            ImageIO.write(myImage, "jpg", outputfile);
+            //String qrCode = readQRCode(outputfile.getPath(),CHAR_SET,hintMap);
+            String qrCode = readQRCode(myImage,CHAR_SET,hintMap);
+            if (qrCode != null) {
+                System.out.println("QRCode:" + qrCode);
+            }
 
-            String charset = "UTF-8"; // or "ISO-8859-1"
-            Map<EncodeHintType, ErrorCorrectionLevel> hintMap = new HashMap<EncodeHintType, ErrorCorrectionLevel>();
-            hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
-
-            /*try {
-                System.out.println("Data read from QR Code: "
-                        + readQRCode(outputfile.getPath(), charset, hintMap));
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (NotFoundException e) {
-                e.printStackTrace();
-            }*/
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -153,6 +162,37 @@ public class VideoCapturing implements Runnable {
 //        }
     }
 
+    public static String readQRCode(BufferedImage bufferedImage, String charSet, Map hintMap) {
+        try {
+            BinaryBitmap binaryBitmap = new BinaryBitmap(new HybridBinarizer(
+                    new BufferedImageLuminanceSource(bufferedImage)));
+            Result qrCodeResult = new MultiFormatReader().decode(binaryBitmap, hintMap);
+            return qrCodeResult.getText();
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+
+    }
+
+
+    public static String readQRCode(String filePath, String charset, Map hintMap)
+            throws FileNotFoundException, IOException, NotFoundException {
+        try {
+            BinaryBitmap binaryBitmap = new BinaryBitmap(new HybridBinarizer(
+                    new BufferedImageLuminanceSource(ImageIO.read(new FileInputStream(filePath)))));
+            Result qrCodeResult = new MultiFormatReader().decode(binaryBitmap, hintMap);
+            return qrCodeResult.getText();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return "Cannot decode Barcode";
+
+    }
 
     public void release() {
         try {
