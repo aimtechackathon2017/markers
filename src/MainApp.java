@@ -9,7 +9,6 @@ public class MainApp {
         application.start();
 
         Moving mov = new Moving(application);
-       // mov.sedniSi();
         try {
             ALAutonomousLife autonomousLife = new ALAutonomousLife(application.session());
             autonomousLife.stopAll();
@@ -31,33 +30,5 @@ public class MainApp {
         {
             e.printStackTrace();
         }
-
-
-       // mov.sedniSi();
-
-
-
-       /* try {
-            BarcodeReader barcodeReader = new BarcodeReader(application.session());
-            barcodeReader.run();
-            Tracker tracker = new Tracker(application.session());
-
-            Navigation navigation = new Navigation(application.session());
-            navigation.setTracker(tracker);
-            tracker.setNavigation(navigation);
-
-            tracker.run();
-
-//            BarcodeReader barcodeReader = new BarcodeReader(application.session());
-//            barcodeReader.run();
-
-//            TouchSubscriber touchSubscriber = new TouchSubscriber(application.session());
-//            touchSubscriber.run();
-
-            application.run();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
     }
 }
