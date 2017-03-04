@@ -48,7 +48,7 @@ public class VideoCapturing implements Runnable {
     private final int topCamera = 0;
     private final int resolution = 2; // 640 x 480
     private final int colorspace = 11; // RGB
-    private final int frameRate = 20; // FPS
+    private final int frameRate = 10; // FPS
 
     private JLabel label;
 
