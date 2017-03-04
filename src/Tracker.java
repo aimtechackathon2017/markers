@@ -14,7 +14,7 @@ public class Tracker {
     private ALMemory memory;
     private ALTracker tracker = null;
     private String targetName = "";
-    private long eventId;
+    private long eventId = 0;
     private Moving moving = null;
     public final float distanceOffset = 0.8f;
 
@@ -51,13 +51,8 @@ public class Tracker {
             return;
         }
 
-
         this.moving.standUp();
 //        this.moving.lookDown();
-
-        this.moving.scanHorizontByHead();
-
-        this.tracker.track(this.targetName);
 
         this.memory = new ALMemory(this.session);
         this.eventId = memory.subscribeToEvent("ALTracker/TargetDetected", new EventCallback<ArrayList>() {
@@ -69,14 +64,19 @@ public class Tracker {
                 try {
                     clean();
                     List<Float> headAngle = moving.getHeadAngle();
-                    moving.walk(0, 0, headAngle.get(0));
                     List<Float> targetDistance = tracker.getTargetPosition();
                     Float walkingDistance = targetDistance.get(0) - distanceOffset;
+                    System.out.println("Distance: " + targetDistance.get(0));
                     if (walkingDistance >= 1f)
                     {
+                        moving.walk(0, 0, headAngle.get(0));
                         moving.walk(targetDistance.get(0) - distanceOffset, 0, 0);
+                        run();
                     }
-                    run();
+                    else
+                    {
+                        System.out.println("I am too close!");
+                    }
                 }
                 catch (Exception e)
                 {
@@ -84,10 +84,18 @@ public class Tracker {
                 }
             }
         });
+
+        this.tracker.track(this.targetName);
+
+//        this.moving.scanHorizontByHead();
     }
 
     public void clean() throws Exception
     {
-        this.memory.unsubscribeToEvent(this.eventId);
+        if (this.eventId != 0)
+        {
+            this.memory.unsubscribeToEvent(this.eventId);
+            this.eventId = 0;
+        }
     }
 }

@@ -17,14 +17,14 @@ public class Moving {
     ALRobotPosture posture;
     public ALMotion motion;
 
-    float DIAMETR=1f;//2.0857f;
+    float DIAMETR=1.5f;//2.0857f;
     float LEFT_MAX =DIAMETR;
     float RIGHT_MAX = -DIAMETR;
     float UP_MIN=0.330041f;
     float UP_CENTER=0f;
     float UP_MAX=-0.449073f;
     float UP_STEP = .3f;
-    float scanTime=0.2f;
+    float scanTime=0.6f;
 
 
     float headPositionTop=0;
