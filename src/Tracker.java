@@ -15,13 +15,14 @@ public class Tracker {
     private ALTracker tracker = null;
     private String targetName = "";
     private long eventId;
-    private Navigation navigation = null;
+    private Moving moving = null;
 
-    public Tracker(Session session) {
+    public Tracker(Session session, Moving moving) {
         this.session = session;
 
         try {
             this.tracker = new ALTracker(session);
+            this.moving = moving;
 
             this.targetName = "RedBall";
             float size = 0.06f;
@@ -42,17 +43,14 @@ public class Tracker {
         }
     }
 
-    public void setNavigation(Navigation navigation)
-    {
-        this.navigation = navigation;
-    }
-
     public void run() throws Exception
     {
         if (this.tracker == null)
         {
             return;
         }
+
+        this.moving.standUp();
 
         this.tracker.track(this.targetName);
 
@@ -65,7 +63,8 @@ public class Tracker {
 
                 try {
                     clean();
-                    navigation.walkStraight();
+                    moving.walk(0.2f, 0, 0);
+                    run();
                 }
                 catch (Exception e)
                 {

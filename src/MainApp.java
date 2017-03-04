@@ -8,7 +8,6 @@ public class MainApp {
         Application application = new Application(args, robotUrl);
         application.start();
 
-        Moving mov = new Moving(application);
         try {
             ALAutonomousLife autonomousLife = new ALAutonomousLife(application.session());
             autonomousLife.stopAll();
@@ -16,15 +15,14 @@ public class MainApp {
             ALMotion motion = new ALMotion(application.session());
             motion.wakeUp();
 
-            // Moving mov = new Moving(application);
+            Moving mov = new Moving(application);
 
-            Tracker tracker = new Tracker(application.session());
-
-            Navigation navigation = new Navigation(application.session());
-            navigation.setTracker(tracker);
-            tracker.setNavigation(navigation);
+            Tracker tracker = new Tracker(application.session(), mov);
 
             tracker.run();
+
+            Thread.sleep(20000);
+            tracker.clean();
         }
         catch (Exception e)
         {
