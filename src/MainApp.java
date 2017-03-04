@@ -5,6 +5,9 @@ public class MainApp {
         String robotUrl = "tcp://192.168.90.99:9559";
         Application application = new Application(args, robotUrl);
         application.start();
+
+        Moving mov = new Moving(application);
+       // mov.sedniSi();
         try {
             BarcodeReader barcodeReader = new BarcodeReader(application.session());
             barcodeReader.run();
