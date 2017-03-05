@@ -11,6 +11,8 @@ public class MainApp {
     static ALTextToSpeech tts;
     static String lastQr = "";
 
+   public static boolean release = false;
+
     public static void main(String[] args) {
 
 
@@ -21,7 +23,7 @@ public class MainApp {
         try {
 
             tts = new ALTextToSpeech(application.session());
-
+            if(release)tts.say("Já jsem váš nový skladník rómeo a přeorganizuji vám tu ten nepořádek");
             ALAutonomousLife autonomousLife = new ALAutonomousLife(application.session());
             autonomousLife.stopAll();
 
@@ -31,7 +33,7 @@ public class MainApp {
 //            tts.say("Zdravím, já jsem Romeo, budoucí vládce lidstva.");
 
             Moving mov = new Moving(application);
-
+            mov.handsUp();
            /* BarcodeReader barcodeReader = new BarcodeReader(application.session());
             barcodeReader.run();*/
 

@@ -219,8 +219,8 @@ public class Moving {
         waveJoints.add("LShoulderPitch");
 
         ArrayList<Float> angleList=new ArrayList<Float>();
-        angleList.add(0.0f);
-        angleList.add(0.0f);
+        angleList.add(0f);
+        angleList.add(0f);
 
         try {
             motion.setAngles(waveJoints, angleList, 0.1f);

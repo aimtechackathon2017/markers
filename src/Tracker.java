@@ -1,6 +1,7 @@
 import com.aldebaran.qi.CallError;
 import com.aldebaran.qi.Session;
 import com.aldebaran.qi.helper.EventCallback;
+import com.aldebaran.qi.helper.proxies.ALAudioPlayer;
 import com.aldebaran.qi.helper.proxies.ALMemory;
 import com.aldebaran.qi.helper.proxies.ALTracker;
 
@@ -21,6 +22,7 @@ public class Tracker {
     public final float distanceOffset = 0.3f;
     State state;
     boolean foundMark = false;
+    ALAudioPlayer audioPlayer;
 
 
     public Tracker(Session session, Moving moving, State f) {
@@ -36,6 +38,10 @@ public class Tracker {
             tracker.setEffector(effector);
             tracker.registerTarget(this.targetName, size);
             tracker.setMode("Head");
+
+            audioPlayer=new ALAudioPlayer(session);
+
+
 
             Float[] positionsVals = new Float[]{-0.3f, -0.3f, 0f, 0.1f, 0.1f, 0.3f};
             List<Float> positionsVal = Arrays.asList(positionsVals);
@@ -100,15 +106,29 @@ public class Tracker {
                 try {
                     clean();
                     List<Float> headAngle = moving.getHeadAngle();
-                    moving.walk(0, 0, headAngle.get(0));
-                    List<Float> targetDistance = tracker.getTargetPosition();
+                    List<Float> targetDistance = tracker.getTargetPosition(2    );
 
+                    //ArrayList<Float> targetDistance = (ArrayList<Float>)tracker.getRelativePosition();
                     Float walkingDistance = targetDistance.get(0) - distanceOffset;
                     if (walkingDistance >= 0.3f)
                     {
                         tracker.pointAt("RArm",targetDistance,0,1.0f);
+                        if(MainApp.release)moving.tts.say("Hele, támhle je, mrška! Jdu " );
+                        moving.tts.say(Math.floor(targetDistance.get(0) * 100.0) / 100.0 + " metrů.");
+                        moving.walk(0, 0, headAngle.get(0));
                         foundMark=true;
-                        moving.tts.say("Hele, značka! Jdu " + Math.floor(targetDistance.get(0) * 100.0) / 100.0 + " metrů.");
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    audioPlayer.playFile("/tmp/t.mp3");
+                                } catch (CallError callError) {
+                                    callError.printStackTrace();
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }).start();
                         moving.walk(targetDistance.get(0) - distanceOffset, 0, 0);
                         foundMark=false;
                         run();
