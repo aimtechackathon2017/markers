@@ -11,7 +11,7 @@ public class MainApp {
     static ALTextToSpeech tts;
     static String lastQr = "";
 
-   public static boolean release = false;
+   public static boolean release = true;
 
     public static void main(String[] args) {
 
